@@ -1,0 +1,25 @@
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Data & Models (Excluded due to size limits)
+dataset/
+models/
+*.keras
+*.h5
+*.hdf5
+*.pt
+*.pth
+
+# Streamlit
+.streamlit/

@@ -1,0 +1,23 @@
+# Acknowledgements
+
+The "MediVision AI" project makes use of various open-source libraries, tools, and potentially copyrighted content. This file serves to acknowledge and credit the original creators and copyright holders of any such material used in the development and operation of this project.
+
+## Open Source Libraries and Frameworks
+This project was made possible by several incredible open-source projects. We gratefully acknowledge the developers and contributors to the following libraries:
+- **TensorFlow & Keras** (Apache License 2.0): For providing the core deep learning framework used to train and run the EfficientNetB0 model.
+- **Streamlit** (Apache License 2.0): For the open-source app framework used to build the interactive web dashboard.
+- **OpenCV** (Apache License 2.0): Used for image processing and computer vision tasks.
+- **Pandas** (BSD 3-Clause License): For data manipulation and analysis.
+- **NumPy** (BSD 3-Clause License): For fundamental scientific computing and array operations.
+- **Plotly** (MIT License): For generating interactive data visualizations.
+- **Pillow / PIL** (HPND License): For image handling capabilities.
+- **ReportLab** (BSD License): For generating downloadable PDF medical reports.
+
+## Datasets
+- **COVID-19 Radiography Database**: The deep learning model in this project was trained using publicly available, anonymized academic datasets containing chest X-rays for COVID-19, Viral Pneumonia, and Normal cases (e.g., datasets curated by researchers from Qatar University, the University of Dhaka, and collaborators, commonly hosted on platforms like Kaggle).
+
+## Model Architecture
+- **EfficientNetB0**: The pre-trained convolutional neural network architecture utilized for transfer learning in this project was originally developed by researchers at Google Brain.
+
+---
+**Disclaimer**: Every effort has been made to respect the intellectual property rights of others. This project is for educational and portfolio purposes only. If you believe your copyrighted work has been used without proper attribution or in violation of its license, please contact the repository owner so the issue can be resolved promptly.

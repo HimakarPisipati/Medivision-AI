@@ -1,0 +1,4 @@
+,Train,Validation,Test,Total
+COVID,2892,361.0,363.0,3616.0
+Normal,2881,,,2881.0
+Viral Pneumonia,1076,134.0,135.0,1345.0
