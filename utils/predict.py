@@ -6,13 +6,19 @@ import tensorflow as tf
 # Define classes as requested
 CLASSES = ['COVID', 'Normal', 'Viral Pneumonia']
 
+MODEL_PATH = 'models/ResNet50_final.keras'
+
 @st.cache_resource
 def load_cached_model():
     """
-    Loads the cached best_model.keras.
+    Loads the cached ResNet50 model.
     """
+    import os
+    if not os.path.exists(MODEL_PATH):
+        st.error(f"Model file not found at {MODEL_PATH}. Please copy your trained model from Google Drive (MyDrive/computervisionproject/model_comparison/ResNet50/ResNet50_final.keras) into the local 'models/' directory.")
+        return None
     try:
-        model = tf.keras.models.load_model('models/best_model.keras')
+        model = tf.keras.models.load_model(MODEL_PATH, compile=False)
         return model
     except Exception as e:
         st.error(f"Error loading model: {e}")

@@ -2,10 +2,12 @@ import cv2
 import numpy as np
 from PIL import Image
 
+from tensorflow.keras.applications.resnet50 import preprocess_input
+
 def preprocess_image(image_file):
     """
     Loads, resizes (224x224), converts to RGB, and normalizes the image.
-    Returns a tensor suitable for EfficientNetB0 prediction.
+    Returns a tensor suitable for ResNet50 prediction.
     """
     # Read the image file using PIL
     img = Image.open(image_file)
@@ -20,9 +22,10 @@ def preprocess_image(image_file):
     # Resize to 224x224
     img_resized = cv2.resize(img_array, (224, 224))
     
-    # Normalize if needed (EfficientNetB0 usually expects [0, 255], 
-    # but some fine-tuned versions expect [0, 1]. We'll keep [0, 255] as default for Keras EfficientNet, 
-    # but adding an expand_dims to make it a batch of 1).
+    # Add batch dimension
     img_tensor = np.expand_dims(img_resized, axis=0)
     
-    return img_tensor
+    # Apply ResNet50 preprocessing
+    img_preprocessed = preprocess_input(img_tensor.astype(np.float32))
+    
+    return img_preprocessed

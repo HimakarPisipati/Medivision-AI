@@ -104,7 +104,7 @@ with st.sidebar:
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("---")
     st.markdown("<div style='margin-bottom: 16px;'><span class='status-indicator'></span><span class='status-text'>Model Ready</span></div>", unsafe_allow_html=True)
-    st.markdown("**Model:** EfficientNetB0<br>**Accuracy:** 94.6%", unsafe_allow_html=True)
+    st.markdown("**Model:** ResNet50", unsafe_allow_html=True)
 
 # Load Model
 model = load_cached_model()
@@ -130,17 +130,15 @@ def render_footer():
 if page == "Dashboard":
     # Hero Section
     st.markdown("<div style='text-align: center; margin-top: 2rem; margin-bottom: 3rem;'>", unsafe_allow_html=True)
-    st.markdown("<span class='badge'>AI-POWERED • EFFICIENTNETB0</span>", unsafe_allow_html=True)
+    st.markdown("<span class='badge'>AI-POWERED • RESNET50</span>", unsafe_allow_html=True)
     st.markdown("<h1>MediVision AI</h1>", unsafe_allow_html=True)
     st.markdown("<p style='font-size: 1.25rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto;'>Upload a chest X-ray and receive an AI-generated classification across COVID-19, Normal, and Viral Pneumonia.</p>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
     
-    # Top metric cards
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Model Accuracy", "94.6%", "+2.1% tuning")
-    col2.metric("Disease Classes", "3", "COVID, Normal, Pneumonia")
-    col3.metric("Model Architecture", "EfficientNetB0")
-    col4.metric("Image Resolution", "224 × 224")
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Disease Classes", "3", "COVID, Normal, Pneumonia")
+    col2.metric("Model Architecture", "ResNet50")
+    col3.metric("Image Resolution", "224 × 224")
     
     st.markdown("<br><br>", unsafe_allow_html=True)
     
@@ -169,7 +167,7 @@ elif page == "Analyze X-Ray":
     
     if uploaded_file is not None:
         if model is None:
-            st.error("Model could not be loaded. Please ensure 'models/best_model.keras' exists.")
+            st.error("Model could not be loaded. Please ensure 'models/ResNet50_final.keras' exists.")
         else:
             col_img, col_results = st.columns([1, 1.5])
             
@@ -292,7 +290,7 @@ elif page == "Analyze X-Ray":
                         </div>
                         <div class='info-card'>
                             <div class='info-label'>Model</div>
-                            <div class='info-val'>EfficientNetB0</div>
+                            <div class='info-val'>ResNet50</div>
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
@@ -398,7 +396,7 @@ elif page == "Model Insights":
         st.markdown("<div class='premium-card'>", unsafe_allow_html=True)
         st.markdown("<h3>Architecture</h3>", unsafe_allow_html=True)
         st.markdown("""
-        **EfficientNetB0** was chosen for its optimal balance of accuracy and computational efficiency.
+        **ResNet50** was chosen for its robust feature extraction capabilities and proven performance in medical imaging.
         - **Transfer Learning:** Pre-trained on ImageNet.
         - **Fine-Tuning:** Tailored for chest X-ray classification.
         - **Parameters:** ~5.3 million.
@@ -409,7 +407,6 @@ elif page == "Model Insights":
         st.markdown("<div class='premium-card'>", unsafe_allow_html=True)
         st.markdown("<h3>Performance</h3>", unsafe_allow_html=True)
         st.markdown("""
-        - **Test Accuracy:** 94.6%
         - **Input Resolution:** 224 × 224 pixels
         - **Output Classes:** 3 (COVID, Normal, Viral Pneumonia)
         - **Average Inference Time:** < 50ms (CPU)
@@ -435,7 +432,7 @@ elif page == "Model Insights":
         </div>
         <div style='display: flex; align-items: center; gap: 16px; background: rgba(37,99,235,0.1); padding: 16px; border-radius: 8px; border: 1px solid rgba(37,99,235,0.3);'>
             <div style='font-size: 24px;'>🧠</div>
-            <div><strong>3. Inference:</strong> EfficientNetB0 Feature Extraction & Classification</div>
+            <div><strong>3. Inference:</strong> ResNet50 Feature Extraction & Classification</div>
         </div>
         <div style='display: flex; align-items: center; gap: 16px; background: {bg_color}; padding: 16px; border-radius: 8px;'>
             <div style='font-size: 24px;'>📊</div>
@@ -475,7 +472,7 @@ elif page == "About":
         <div class='step-number'>03</div>
         <div class='step-content'>
             <h4>Analyze</h4>
-            <p>Our fine-tuned EfficientNetB0 model extracts features and computes probabilities.</p>
+            <p>Our fine-tuned ResNet50 model extracts features and computes probabilities.</p>
         </div>
     </div>
     <div class='pipeline-step'>

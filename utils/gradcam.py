@@ -30,45 +30,96 @@ def generate_gradcam(model, input_image, predicted_index, original_image=None):
             
         input_tensor = tf.cast(input_image, tf.float32)
         
-        # Access nested model layers
-        efficientnet = model.get_layer("efficientnetb0")
-        gap = model.get_layer("global_average_pooling2d")
-        dropout = model.get_layer("dropout")
-        dense = model.get_layer("dense")
+        # Identify the last convolutional layer dynamically
+        nested_model = None
+        last_conv_layer_name = None
         
-        # Access sequential augmentation layer if present
-        try:
-            preprocessing_layer = model.get_layer("sequential")
-        except Exception:
-            preprocessing_layer = None
-            
-        # Record operations with GradientTape
-        with tf.GradientTape() as tape:
-            if preprocessing_layer is not None:
-                processed_image = preprocessing_layer(input_tensor, training=False)
-            else:
-                processed_image = input_tensor
+        def get_layer_shape(layer):
+            try:
+                if hasattr(layer, 'output_shape') and layer.output_shape is not None:
+                    if isinstance(layer.output_shape, list): return layer.output_shape[0]
+                    return layer.output_shape
+                if hasattr(layer, 'output') and hasattr(layer.output, 'shape'):
+                    return layer.output.shape
+            except Exception:
+                pass
+            return None
+
+        # Check if the backbone is nested
+        for layer in model.layers:
+            if isinstance(layer, tf.keras.Model):
+                nested_model = layer
+                break
                 
-            features = efficientnet(processed_image, training=False)
-            pooled = gap(features)
-            dropped = dropout(pooled, training=False)
-            predictions = dense(dropped)
-            class_score = predictions[:, predicted_index]
+        if nested_model:
+            for layer in reversed(nested_model.layers):
+                shape = get_layer_shape(layer)
+                if shape is not None and len(shape) == 4:
+                    last_conv_layer_name = layer.name
+                    break
+            if not last_conv_layer_name:
+                raise ValueError("Could not find a convolutional layer in the nested model.")
+                
+            last_conv_layer = nested_model.get_layer(last_conv_layer_name)
+            inner_grad_model = tf.keras.Model(nested_model.inputs, [last_conv_layer.output, nested_model.output])
             
-        # Compute gradients of class score with respect to feature maps
-        gradients = tape.gradient(class_score, features)
+            with tf.GradientTape() as tape:
+                # Forward pass up to the nested model
+                x = input_tensor
+                for layer in model.layers:
+                    if layer == nested_model:
+                        break
+                    if not isinstance(layer, tf.keras.layers.InputLayer):
+                        x = layer(x)
+                    
+                conv_outputs, nested_out = inner_grad_model(x)
+                tape.watch(conv_outputs)
+                
+                # Forward pass for the rest of the model
+                x_out = nested_out
+                past_nested = False
+                for layer in model.layers:
+                    if past_nested:
+                        if not isinstance(layer, tf.keras.layers.InputLayer):
+                            x_out = layer(x_out)
+                    if layer == nested_model:
+                        past_nested = True
+                
+                preds = x_out
+                class_score = preds[:, predicted_index]
+                
+        else:
+            # Flat model
+            for layer in reversed(model.layers):
+                shape = get_layer_shape(layer)
+                if shape is not None and len(shape) == 4:
+                    last_conv_layer_name = layer.name
+                    break
+                    
+            if not last_conv_layer_name:
+                raise ValueError("Could not find a convolutional layer in the model.")
+                
+            last_conv_layer = model.get_layer(last_conv_layer_name)
+            grad_model = tf.keras.Model(model.inputs, [last_conv_layer.output, model.output])
+            
+            with tf.GradientTape() as tape:
+                conv_outputs, preds = grad_model(input_tensor)
+                tape.watch(conv_outputs)
+                class_score = preds[:, predicted_index]
+                
+        # Compute gradients
+        gradients = tape.gradient(class_score, conv_outputs)
         if gradients is None:
-            raise ValueError("Gradients could not be computed for the specified layer and class.")
+            raise ValueError("Gradients could not be computed for the selected layer.")
             
-        # Global average pooling of gradients (channel-wise weights)
-        pooled_gradients = tf.reduce_mean(gradients, axis=(1, 2))
+        # Global average pooling of gradients
+        pooled_gradients = tf.reduce_mean(gradients, axis=(0, 1, 2))
         
-        # Remove batch dimension
-        features_single = features[0]
-        pooled_gradients_single = pooled_gradients[0]
+        # Remove batch dimension from features
+        features_single = conv_outputs[0]
         
-        # Compute weighted sum of feature maps
-        heatmap = tf.reduce_sum(features_single * pooled_gradients_single, axis=-1)
+        # Compute weighted sum
+        heatmap = tf.reduce_sum(features_single * pooled_gradients, axis=-1)
         
         # Apply ReLU to keep only features that have a positive influence
         heatmap = tf.maximum(heatmap, 0)
@@ -76,7 +127,7 @@ def generate_gradcam(model, input_image, predicted_index, original_image=None):
         # Normalize heatmap between 0 and 1
         max_val = tf.reduce_max(heatmap)
         heatmap = heatmap / (max_val + 1e-8)
-        heatmap = heatmap.numpy()
+        heatmap = heatmap.numpy().astype('float32')
         
         # Prepare the base image for display and overlay
         if original_image is not None:
