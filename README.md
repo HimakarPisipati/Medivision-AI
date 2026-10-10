@@ -16,7 +16,7 @@
 
 # 📌 Overview
 
-Chest X-ray interpretation is a time-consuming process that requires experienced radiologists, especially during high patient volumes. MediVision AI leverages **Transfer Learning with EfficientNetB0** to classify chest radiographs into:
+Chest X-ray interpretation is a time-consuming process that requires experienced radiologists, especially during high patient volumes. MediVision AI leverages **Transfer Learning with ResNet50** to classify chest radiographs into:
 
 - 🦠 COVID-19
 - 🫁 Viral Pneumonia
@@ -28,7 +28,7 @@ The project combines **Deep Learning**, **Computer Vision**, and a **modern Stre
 
 # ✨ Key Features
 
-- 🧠 Transfer Learning using EfficientNetB0
+- 🧠 Transfer Learning using ResNet50
 - 📊 Three-Class Chest X-Ray Classification
 - ⚡ Real-Time AI Prediction
 - 📈 Prediction Confidence Visualization
@@ -47,11 +47,11 @@ The project combines **Deep Learning**, **Computer Vision**, and a **modern Stre
 
 | Metric | Value |
 |---------|-------|
-| Model | EfficientNetB0 |
+| Model | ResNet50 |
 | Learning Strategy | Transfer Learning + Fine-Tuning |
 | Classes | COVID, Normal, Viral Pneumonia |
 | Input Size | 224 × 224 |
-| Test Accuracy | **94.6%** |
+| Test Accuracy | **Pending Validation** |
 
 ---
 
@@ -78,7 +78,7 @@ The project combines **Deep Learning**, **Computer Vision**, and a **modern Stre
 
 ## Machine Learning
 
-- EfficientNetB0
+- ResNet50
 - Transfer Learning
 - Fine-Tuning
 - TensorFlow Dataset API
@@ -128,7 +128,7 @@ COVID_XRAY_PROJECT/
 ├── dataset/
 │
 ├── models/
-│   └── best_model.keras
+│   └── ResNet50_final.keras
 │
 ├── notebooks/
 │   ├── preprocessing.ipynb
@@ -163,7 +163,7 @@ COVID_XRAY_PROJECT/
                TensorFlow Prediction Pipeline
                           │
                           ▼
-             EfficientNetB0 Deep Learning Model
+             ResNet50 Deep Learning Model
                           │
         ┌─────────────────┼─────────────────┐
         ▼                 ▼                 ▼
@@ -193,7 +193,7 @@ Image Validation
 Resize → RGB Conversion → Tensor Conversion
       │
       ▼
-EfficientNetB0 Prediction
+ResNet50 Prediction
       │
       ▼
 Probability Calculation
@@ -217,8 +217,8 @@ Training a high-performing medical image classifier on limited hardware.
 
 **Solution**
 
-- Leveraged **Transfer Learning** with EfficientNetB0 pretrained on ImageNet.
-- Fine-tuned the backbone instead of training from scratch, significantly reducing training time while achieving **94.6% test accuracy**.
+- Leveraged **Transfer Learning** with ResNet50 pretrained on ImageNet.
+- Fine-tuned the backbone instead of training from scratch, significantly reducing training time.
 
 ---
 
@@ -313,7 +313,7 @@ Place your trained model inside:
 ```text
 models/
 
-best_model.keras
+ResNet50_final.keras
 ```
 
 ---
@@ -350,7 +350,7 @@ http://localhost:8501
 
 # 📈 Future Roadmap
 
-- [ ] Grad-CAM Explainable AI Visualization
+- [x] Grad-CAM Explainable AI Visualization
 - [ ] Multi-Disease Chest X-Ray Detection
 - [ ] DICOM File Support
 - [ ] User Authentication
