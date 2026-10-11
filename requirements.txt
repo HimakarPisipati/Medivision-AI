@@ -1,4 +1,7 @@
-streamlit
+fastapi
+uvicorn[standard]
+python-multipart
+httpx
 tensorflow
 opencv-python-headless
 Pillow

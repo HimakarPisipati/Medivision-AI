@@ -23,3 +23,25 @@ models/
 
 # Streamlit
 .streamlit/
+
+# Node / Frontend
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+dist-ssr/
+frontend/dist-ssr/
+.output/
+frontend/.output/
+.nitro/
+frontend/.nitro/
+.wrangler/
+frontend/.wrangler/
+.tanstack/
+frontend/.tanstack/
+.loveable/
+frontend/.loveable/
+*.local
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*

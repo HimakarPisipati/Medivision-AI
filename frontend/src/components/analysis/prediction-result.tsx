@@ -1,0 +1,16 @@
+import { ChartNoAxesCombined, CircleCheck, Info, Download, LoaderCircle, RotateCcw } from 'lucide-react';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Panel, percent, dateLabel } from '@/components/shared/common';
+import { CLASSES, type Prediction } from '@/types/api';
+import { downloadReport } from '@/services/reportService';
+import { apiError } from '@/services/api';
+export function ProbabilityResults({ result }: { result: Prediction }) {
+  return <><div className="result-class"><div><p>MODEL PREDICTION</p><h3>{result.predicted_class}</h3></div><div className="confidence"><strong>{percent(result.confidence)}</strong><p>Model confidence</p></div></div><div className="section-heading"><h2 className="text-xs">Class probabilities</h2><span className="text-[9px] text-muted-foreground">Model-reported values</span></div>{CLASSES.map(name => <div className="probability-row" key={name}><div className={`probability-label ${name === result.predicted_class ? 'font-bold text-primary' : ''}`}><span className="flex items-center gap-1.5">{name}{name === result.predicted_class && <CircleCheck size={12}/>}</span><span>{percent(result.probabilities[name])}</span></div>{result.probabilities[name] !== undefined ? <div className="probability-track" role="meter" aria-label={`${name} probability`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={(result.probabilities[name] ?? 0) * 100}><div className={`probability-fill ${name === result.predicted_class ? 'predicted' : ''}`} style={{ width: `${(result.probabilities[name] ?? 0) * 100}%` }}/></div> : <p className="probability-unavailable">No valid probability provided.</p>}</div>)}{result.caution && result.confidence !== undefined && result.confidence < result.caution.threshold && <div className="inline-note"><Info size={16}/>{result.caution.message}</div>}</>;
+}
+export function PredictionResult({ result, file, onReset }: { result: Prediction; file: File; onReset: () => void }) {
+  const [reportState, setReportState] = useState<'idle'|'loading'|'success'|'error'>('idle');
+  const [reportError, setReportError] = useState('');
+  async function report() { setReportState('loading'); try { await downloadReport(file, result); setReportState('success'); } catch (error) { setReportError(apiError(error)); setReportState('error'); } }
+  return <Panel title="Analysis results" icon={ChartNoAxesCombined} action={<span className="tag"><CircleCheck size={10}/>Analysis complete</span>}><div className="panel-body"><ProbabilityResults result={result}/><div className="result-meta"><span>Model: {result.model_name || 'Not provided'}</span><span>{dateLabel(result.timestamp)}</span></div><div className="flex gap-3 mt-5 flex-wrap"><Button onClick={report} disabled={reportState === 'loading'} size="sm">{reportState === 'loading' ? <LoaderCircle className="animate-spin"/> : <Download/>}{reportState === 'loading' ? 'Generating report…' : 'Download PDF Report'}</Button><Button variant="outline" size="sm" onClick={onReset}><RotateCcw/>Analyze another</Button></div>{reportState === 'success' && <p role="status" className="text-success text-[10px] mt-3">Report downloaded successfully.</p>}{reportState === 'error' && <p role="alert" className="alert-error">{reportError}</p>}</div></Panel>;
+}

@@ -1,27 +1,42 @@
+import os
 import time
+import logging
 import numpy as np
-import streamlit as st
 import tensorflow as tf
+
+logger = logging.getLogger(__name__)
 
 # Define classes as requested
 CLASSES = ['COVID', 'Normal', 'Viral Pneumonia']
 
 MODEL_PATH = 'models/ResNet50_final.keras'
 
-@st.cache_resource
-def load_cached_model():
+_cached_model = None
+
+def load_cached_model(model_path: str = MODEL_PATH):
     """
-    Loads the cached ResNet50 model.
+    Loads and caches the ResNet50 model.
     """
-    import os
-    if not os.path.exists(MODEL_PATH):
-        st.error(f"Model file not found at {MODEL_PATH}. Please copy your trained model from Google Drive (MyDrive/computervisionproject/model_comparison/ResNet50/ResNet50_final.keras) into the local 'models/' directory.")
-        return None
+    global _cached_model
+    if _cached_model is not None:
+        return _cached_model
+
+    if not os.path.exists(model_path):
+        # Also check relative to project root
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        candidate = os.path.join(project_root, model_path)
+        if os.path.exists(candidate):
+            model_path = candidate
+        else:
+            logger.error(f"Model file not found at {model_path}.")
+            return None
+
     try:
-        model = tf.keras.models.load_model(MODEL_PATH, compile=False)
+        model = tf.keras.models.load_model(model_path, compile=False)
+        _cached_model = model
         return model
     except Exception as e:
-        st.error(f"Error loading model: {e}")
+        logger.error(f"Error loading model: {e}", exc_info=True)
         return None
 
 def predict_disease(model, image_tensor):
