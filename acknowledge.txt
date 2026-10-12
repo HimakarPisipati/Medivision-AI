@@ -13,11 +13,14 @@ This project was made possible by several incredible open-source projects. We gr
 - **Pillow / PIL** (HPND License): For image handling capabilities.
 - **ReportLab** (BSD License): For generating downloadable PDF medical reports.
 
+## Frontend & UI Design Tools
+- **Lovable.dev**: The web frontend interface and UI components for MediVision AI were designed and built using the AI development platform [Lovable](https://lovable.dev).
+
 ## Datasets
 - **COVID-19 Radiography Database**: The deep learning model in this project was trained using publicly available, anonymized academic datasets containing chest X-rays for COVID-19, Viral Pneumonia, and Normal cases (e.g., datasets curated by researchers from Qatar University, the University of Dhaka, and collaborators, commonly hosted on platforms like Kaggle).
 
 ## Model Architecture
-- **EfficientNetB0**: The pre-trained convolutional neural network architecture utilized for transfer learning in this project was originally developed by researchers at Google Brain.
+- **EfficientNetB0 / ResNet50**: The pre-trained convolutional neural network architectures utilized for transfer learning in this project were originally developed by computer vision and deep learning researchers.
 
 ---
 **Disclaimer**: Every effort has been made to respect the intellectual property rights of others. This project is for educational and portfolio purposes only. If you believe your copyrighted work has been used without proper attribution or in violation of its license, please contact the repository owner so the issue can be resolved promptly.

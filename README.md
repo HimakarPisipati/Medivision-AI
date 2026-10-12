@@ -64,6 +64,7 @@ The project combines **Deep Learning**, **Computer Vision**, a high-performance 
 
 ## Frontend
 
+- Lovable.dev (AI Frontend Generation & Prototyping)
 - React 18 / Vite
 - TypeScript
 - Tailwind CSS / Radix UI
@@ -116,6 +117,7 @@ The project combines **Deep Learning**, **Computer Vision**, a high-performance 
 
 ## Development Tools
 
+- Lovable.dev (AI-Assisted Frontend Development)
 - Google Colab (Model Training)
 - VS Code
 - Git
@@ -437,6 +439,14 @@ Through this project, I gained hands-on experience in:
 - **No Real Patient Data:** This system is trained on publicly available, anonymized academic datasets. Do not use this application to process or store real, un-anonymized patient data (PHI) to comply with HIPAA and data privacy laws.
 - **Educational Scope:** The repository and its assets are provided strictly for resume-building, portfolio demonstration, and educational research.
 - **No Commercial Medical Use:** The model is not FDA-approved or certified for clinical use and must not be used in a commercial medical environment.
+
+---
+
+# 🙏 Acknowledgements
+
+- **[Lovable](https://lovable.dev)**: The frontend user interface and web application design for MediVision AI were created and generated using Lovable.dev.
+- **COVID-19 Radiography Database**: Researchers from Qatar University, University of Dhaka, and collaborators for curating the chest X-ray datasets.
+- Open-source communities behind TensorFlow, FastAPI, React, OpenCV, and Tailwind CSS.
 
 ---
 
